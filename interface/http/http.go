@@ -2,6 +2,7 @@ package http
 
 import (
 	"github.com/rizqirenaldy27/invoice-esb/domain/customer"
+	"github.com/rizqirenaldy27/invoice-esb/domain/invoice"
 	"github.com/rizqirenaldy27/invoice-esb/domain/item"
 	"github.com/rizqirenaldy27/invoice-esb/domain/item_type"
 	"github.com/rizqirenaldy27/invoice-esb/utils"
@@ -55,6 +56,17 @@ func InitRouter(db *gorm.DB) *fiber.App {
 		items.Get("/", itemHandler.Read)
 		items.Put("/:item_id", itemHandler.Update)
 		items.Delete("/:item_id", itemHandler.Delete)
+	}
+
+	invoiceHandler := invoice.NewInvoiceHandler(db)
+	invoices := app.Group("/v1/invoice")
+	invoices.Use(CORSMiddleware())
+	{
+		invoices.Post("/", invoiceHandler.Create)
+		invoices.Get("/:invoice_id", invoiceHandler.ReadByID)
+		invoices.Get("/", invoiceHandler.Read)
+		invoices.Put("/:invoice_id", invoiceHandler.Update)
+		invoices.Delete("/:invoice_id", invoiceHandler.Delete)
 	}
 
 	app.Use(func(c *fiber.Ctx) error {

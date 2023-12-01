@@ -25,9 +25,8 @@ func (ch *CustomerHandler) Create(c *fiber.Ctx) error {
 	var customer Customer
 
 	if err := c.BodyParser(&customer); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": err.Error(),
-		})
+		utils.ResponseError(c, err.Error())
+		return nil
 	}
 
 	result := ch.db.Create(&customer)

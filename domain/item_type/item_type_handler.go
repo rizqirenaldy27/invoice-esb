@@ -25,9 +25,8 @@ func (ch *ItemTypeHandler) Create(c *fiber.Ctx) error {
 	var itemType ItemType
 
 	if err := c.BodyParser(&itemType); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": err.Error(),
-		})
+		utils.ResponseError(c, err.Error())
+		return nil
 	}
 
 	result := ch.db.Create(&itemType)
